@@ -5,16 +5,19 @@ import {
   ChevronRight, BarChart3, Cloud, CheckCircle2, PieChart, AlertTriangle,
   Plug, Wifi, MonitorSmartphone, LayoutDashboard, Info, CreditCard, PenTool,
   Zap, Settings, ClipboardList, Briefcase, Gem, ArrowRight, Laptop, Server, Power,
-  Gauge, HardDrive, Factory, Download, Sliders, History, MapPin, Phone, ShieldAlert, TrendingDown, FileText, Calendar
+  Gauge, HardDrive, Factory, Download, Sliders, History, MapPin, Phone, ShieldAlert, TrendingDown, FileText, Calendar,
+  Menu, X
 } from 'lucide-react';
 
 export default function App() {
   // --- Global State ---
   const [isDark, setIsDark] = useState(false);
   const [currentPage, setCurrentPage] = useState('home'); 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Scroll to top on page change
   useEffect(() => {
+    setIsMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
@@ -91,7 +94,7 @@ export default function App() {
 
       <nav className={`fixed w-full z-50 transition-all duration-300 backdrop-blur-apple border-b ${theme.navBg}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentPage('home')}>
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setCurrentPage('home'); setIsMobileMenuOpen(false); }}>
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDark ? 'bg-gradient-to-b from-zinc-800 to-black border border-white/10' : 'bg-gradient-to-b from-zinc-700 to-zinc-950 border border-black shadow-lg'}`}>
                <div className="w-3 h-3 border-[1.5px] border-blue-500 rounded-sm" />
             </div>
@@ -100,7 +103,7 @@ export default function App() {
               <span className="text-[8px] font-bold tracking-widest opacity-60 uppercase">Bharat Sparkline</span>
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-6">
             <div className={`hidden md:flex gap-6 text-xs font-bold tracking-wide ${theme.textMuted}`}>
               <button onClick={() => setCurrentPage('home')} className={`hover:text-blue-500 transition-colors uppercase ${currentPage === 'home' ? 'text-blue-500' : ''}`}>Home</button>
               <button onClick={() => setCurrentPage('dashboard')} className={`hover:text-blue-500 transition-colors uppercase ${currentPage === 'dashboard' ? 'text-blue-500' : ''}`}>Dashboard</button>
@@ -108,9 +111,28 @@ export default function App() {
               <button onClick={() => setCurrentPage('pricing')} className={`hover:text-blue-500 transition-colors uppercase ${currentPage === 'pricing' ? 'text-blue-500' : ''}`}>Pricing</button>
             </div>
             <button onClick={() => setIsDark(!isDark)} className="p-2 rounded-full transition-colors">{isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}</button>
-            <button onClick={() => setCurrentPage('contact')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold transition-all">Contact Us</button>
+            <button onClick={() => setCurrentPage('contact')} className="hidden md:inline-flex bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold transition-all">Contact Us</button>
+            <button
+              className="md:hidden p-2 rounded-full transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+        {isMobileMenuOpen && (
+          <div className={`md:hidden border-t ${isDark ? 'border-white/10 bg-black/90' : 'border-black/10 bg-white/90'} backdrop-blur-apple`}>
+            <div className="px-4 py-3 flex flex-col gap-2 text-sm font-semibold">
+              <button onClick={() => setCurrentPage('home')} className={`text-left px-2 py-2 rounded-lg hover:bg-blue-500/10 ${currentPage === 'home' ? 'text-blue-500' : ''}`}>Home</button>
+              <button onClick={() => setCurrentPage('dashboard')} className={`text-left px-2 py-2 rounded-lg hover:bg-blue-500/10 ${currentPage === 'dashboard' ? 'text-blue-500' : ''}`}>Dashboard</button>
+              <button onClick={() => setCurrentPage('installation')} className={`text-left px-2 py-2 rounded-lg hover:bg-blue-500/10 ${currentPage === 'installation' ? 'text-blue-500' : ''}`}>Installation</button>
+              <button onClick={() => setCurrentPage('pricing')} className={`text-left px-2 py-2 rounded-lg hover:bg-blue-500/10 ${currentPage === 'pricing' ? 'text-blue-500' : ''}`}>Pricing</button>
+              <button onClick={() => setCurrentPage('contact')} className="mt-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all w-full">Contact Us</button>
+            </div>
+          </div>
+        )}
       </nav>
 
       <main className="pt-16 min-h-screen flex flex-col">{renderPage()}</main>
