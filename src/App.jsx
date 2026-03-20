@@ -10,7 +10,7 @@ import {
 
 export default function App() {
   // --- Global State ---
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [currentPage, setCurrentPage] = useState('home'); 
 
   // Scroll to top on page change
